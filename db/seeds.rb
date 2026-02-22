@@ -1,9 +1,22 @@
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
+require “open-uri”
+require “json”
+
+puts “Cleaning database...”
+Dose.destroy_all
+Cocktail.destroy_all
+Ingredient.destroy_all
+
+puts “Fetching ingredients from API...”
+
+url = “https://www.thecocktaildb.com/api/json/v1/1/list.php?i=list”
+# Open the URL and read the JSON content
+json = URI.open(url).read
+# Parse the JSON into Ruby objects
+data = JSON.parse(json)
+# Iterate over the list of ingredients
+data[“drinks”].each do |drink|
+  # For each ingredient, create a new record in your database
+  Ingredient.create!(name: drink[“strIngredient1”])
+end
+
+puts "Finished! Created #{Ingredient.count} ingredients."
