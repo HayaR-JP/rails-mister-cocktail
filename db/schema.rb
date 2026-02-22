@@ -18,7 +18,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_21_070013) do
     t.datetime "created_at", null: false
     t.string "name"
     t.datetime "updated_at", null: false
-end
+  end
 
   create_table "doses", force: :cascade do |t|
     t.bigint "cocktail_id", null: false
